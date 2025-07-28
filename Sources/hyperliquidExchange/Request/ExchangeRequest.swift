@@ -19,6 +19,13 @@ public struct ExchangeRequest: ExchangeEncodePaload, Encodable{
     public var vaultAddress: String? // If trading on behalf of a vault or subaccount, its address in 42-character hexadecimal format; e.g. 0x0000000000000000000000000000000000000000
     public var expiresAfter: Int?
     
+    public init(action: ExchangeBaseAction, nonce: Int, signature: ExchangeSignature, vaultAddress: String? = nil, expiresAfter: Int? = nil) {
+        self.action = action
+        self.nonce = nonce
+        self.signature = signature
+        self.vaultAddress = vaultAddress
+        self.expiresAfter = expiresAfter
+    }
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: CodingKeys.self)
         try container.encode(try action.payload(), forKey: .action)

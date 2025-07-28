@@ -20,6 +20,11 @@ public struct ExchangeTriggerOrderType: Encodable{
     public var isMarket: Bool
     public var triggerPx: String
     public var tpsl: ExchangeTpslType
+    public init(isMarket: Bool, triggerPx: String, tpsl: ExchangeTpslType) {
+        self.isMarket = isMarket
+        self.triggerPx = triggerPx
+        self.tpsl = tpsl
+    }
 }
 
 public struct DynamicCodingKeys: CodingKey {
@@ -62,30 +67,59 @@ public struct ExchangePlaceOrderPayload: ExchangeEncodePaload, Encodable {
     public var r: Bool // reduceOnly
     public var s: String // size
     public var t: ExchangeOrderType // type
+    public init(a: Int, b: Bool, p: String, r: Bool, s: String, t: ExchangeOrderType) {
+        self.a = a
+        self.b = b
+        self.p = p
+        self.r = r
+        self.s = s
+        self.t = t
+    }
 }
 
 public struct ExchangePlaceOrderAction: ExchangeBaseAction, Encodable{
-    public var type: String = "order"
+    public var type: String
     public var orders: [ExchangePlaceOrderPayload]
     public var grouping: ExchangeOrderGroupingType
+    public init(type: String = "order", orders: [ExchangePlaceOrderPayload], grouping: ExchangeOrderGroupingType) {
+        self.type = type
+        self.orders = orders
+        self.grouping = grouping
+    }
 }
 
 public struct ExchangeCancelOrderPayload: Encodable {
     public var a: Int // asset
     public var o: Int // is oid (order id)
+    public init(a: Int, o: Int) {
+        self.a = a
+        self.o = o
+    }
 }
 
 public struct ExchangeCancelOrderAction: ExchangeBaseAction, Encodable {
-    public var type: String = "cancel"
+    public var type: String
     public var cancels: [ExchangeCancelOrderPayload]
+    public init(type: String = "cancel", cancels: [ExchangeCancelOrderPayload]) {
+        self.type = type
+        self.cancels = cancels
+    }
 }
 
 public struct ExchangeCancelOrderByIdPayload: Encodable {
     public var a: Int // asset
     public var cloid: String
+    public init(a: Int, cloid: String) {
+        self.a = a
+        self.cloid = cloid
+    }
 }
 
 public struct ExchangeCancelOrderByIdAction: ExchangeBaseAction, Encodable {
-    public var type: String = "cancelByCloid"
+    public var type: String
     public var cancels: [ExchangeCancelOrderPayload]
+    public init(type: String = "cancelByCloid", cancels: [ExchangeCancelOrderPayload]) {
+        self.type = type
+        self.cancels = cancels
+    }
 }
