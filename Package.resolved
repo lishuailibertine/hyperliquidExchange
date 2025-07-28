@@ -1,0 +1,86 @@
+{
+  "pins" : [
+    {
+      "identity" : "base58swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mathwallet/Base58Swift.git",
+      "state" : {
+        "revision" : "04ccae070ac6f3117db11af864a04229f7c1e025",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "bigint",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/attaswift/BigInt.git",
+      "state" : {
+        "revision" : "99c4b9fb0f52dc9182aee106b07c3d205583b98c",
+        "version" : "5.6.0"
+      }
+    },
+    {
+      "identity" : "bip39swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mathwallet/BIP39swift.git",
+      "state" : {
+        "revision" : "6e654c1fedac7dc3f01443d8bdf108ab6d50245d",
+        "version" : "1.0.1"
+      }
+    },
+    {
+      "identity" : "cryptoswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/krzyzanowskim/CryptoSwift.git",
+      "state" : {
+        "revision" : "4b0565384d3c4c588af09e660535b2c7c9bf5b39",
+        "version" : "1.4.2"
+      }
+    },
+    {
+      "identity" : "promisekit",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mxcl/PromiseKit.git",
+      "state" : {
+        "revision" : "2bc44395edb4f8391902a9ff7c220471882a4d07",
+        "version" : "8.2.0"
+      }
+    },
+    {
+      "identity" : "ripemdswift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mathwallet/RIPEMDSwift.git",
+      "state" : {
+        "revision" : "1a9b1487d1880585c8cc46e26b6d9838184f7858",
+        "version" : "0.0.1"
+      }
+    },
+    {
+      "identity" : "secp256k1swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mathwallet/Secp256k1Swift.git",
+      "state" : {
+        "revision" : "3eac0ee49d57eaf0d91d54df876194cdd0c971fe",
+        "version" : "2.0.0"
+      }
+    },
+    {
+      "identity" : "starscream",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/daltoniam/Starscream.git",
+      "state" : {
+        "revision" : "c6bfd1af48efcc9a9ad203665db12375ba6b145a",
+        "version" : "4.0.8"
+      }
+    },
+    {
+      "identity" : "web3swift",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/mathwallet/web3swift",
+      "state" : {
+        "revision" : "57f4d178f37046541572fba7ef6fcb08535fd5de",
+        "version" : "3.5.0"
+      }
+    }
+  ],
+  "version" : 2
+}

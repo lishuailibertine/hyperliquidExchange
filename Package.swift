@@ -1,4 +1,4 @@
-// swift-tools-version: 6.1
+// swift-tools-version: 5.6
 // The swift-tools-version declares the minimum version of Swift required to build this package.
 
 import PackageDescription
@@ -11,11 +11,16 @@ let package = Package(
             name: "hyperliquidExchange",
             targets: ["hyperliquidExchange"]),
     ],
+    dependencies: [
+        .package(url: "https://github.com/mathwallet/web3swift", exact: "3.5.0")
+    ],
     targets: [
         // Targets are the basic building blocks of a package, defining a module or a test suite.
         // Targets can depend on other targets in this package and products from dependencies.
         .target(
-            name: "hyperliquidExchange"),
+            name: "hyperliquidExchange",
+            dependencies: ["web3swift"]
+        ),
         .testTarget(
             name: "hyperliquidExchangeTests",
             dependencies: ["hyperliquidExchange"]
