@@ -4,6 +4,10 @@
 //
 //  Created by li shuai on 2025/7/28.
 //
+public enum ExchangeResponseError: Error {
+    case InvalidResponse
+}
+
 public struct ExchangeResponseStatuses<T: Decodable>: Decodable{
     public var statuses: [T]
 }
@@ -28,6 +32,7 @@ public struct ExchangeOrderFilledStatus: Decodable {
 public struct ExchangeOrderRestingStatus: Decodable {
     public let oid: Int
 }
+
 public enum ExchangeOrderStatusItem: Decodable {
     case resting(ExchangeOrderRestingStatus)
     case filled(ExchangeOrderFilledStatus)
