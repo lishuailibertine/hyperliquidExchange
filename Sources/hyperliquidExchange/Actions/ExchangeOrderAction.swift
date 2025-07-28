@@ -38,7 +38,7 @@ public struct DynamicCodingKeys: CodingKey {
     }
 }
 
-public enum ExchangeOrderType: ExchangeEncodePaload, Encodable {
+public enum ExchangeOrderType: ExchangeEncodePayload, Encodable {
     case limit(ExchangeLimitOrderType)
     case trigger(ExchangeTriggerOrderType)
     public func encode(to encoder: Encoder) throws {
@@ -60,7 +60,7 @@ public enum ExchangeOrderGroupingType: String, Encodable{
     case positionTpsl
 }
 
-public struct ExchangePlaceOrderPayload: ExchangeEncodePaload, Encodable {
+public struct ExchangePlaceOrderPayload: ExchangeEncodePayload, Encodable {
     public var a: Int // asset
     public var b: Bool // isBuy
     public var p: String // price

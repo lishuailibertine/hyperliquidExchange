@@ -5,10 +5,10 @@
 //  Created by li shuai on 2025/7/25.
 //
 import Foundation
-public protocol ExchangeBaseAction: ExchangeEncodePaload{
+public protocol ExchangeBaseAction: ExchangeEncodePayload{
     var type: String { get }
 }
-extension ExchangeEncodePaload where Self: Encodable {
+extension ExchangeEncodePayload where Self: Encodable {
     public func payload() throws -> [String : Any] {
         let data = try JSONEncoder().encode(self)
         let object = try JSONSerialization.jsonObject(with: data, options: [])

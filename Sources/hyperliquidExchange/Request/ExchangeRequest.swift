@@ -4,12 +4,12 @@
 //
 //  Created by li shuai on 2025/7/28.
 //
-public struct ExchangeSignature: ExchangeEncodePaload, Encodable{
+public struct ExchangeSignature: ExchangeEncodePayload, Encodable{
     public var r: String
     public var s: String
     public var v: Int
 }
-public protocol ExchangeEncodePaload {
+public protocol ExchangeEncodePayload {
     func payload() throws -> [String: Any]
 }
 
@@ -17,7 +17,7 @@ public enum ExchangeRequestError: Error {
     case SignatureError
 }
 
-public struct ExchangeRequest: ExchangeEncodePaload, Encodable{
+public struct ExchangeRequest: ExchangeEncodePayload, Encodable{
     public var action: ExchangeBaseAction
     public var nonce: Int // Recommended to use the current timestamp in milliseconds
     public var signature: ExchangeSignature?
