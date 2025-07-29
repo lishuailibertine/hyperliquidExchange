@@ -60,6 +60,14 @@ public struct ExchangeRequest: ExchangeEncodePayload, Encodable{
 
 extension ExchangeRequest{
     
+    public func buildPayload(isMainnet: Bool = true) throws -> Data {
+        let hash = try action_hash()
+        let phantom_agent = constructPhantomAgent(hash: hash.toHexString(), isMainnet: isMainnet)
+        let l1Payload = l1Payload(phantomAgent: phantom_agent)
+        let typedData = try makeEIP712TypedData(from: l1Payload)
+        return typedData
+    }
+    
     public func action_hash() throws -> Data{
         let encoder = MsgPackEncoder()
         var data = Data()
@@ -113,5 +121,12 @@ extension ExchangeRequest{
             "primaryType": "Agent",
             "message": phantomAgent
         ]
+    }
+    
+    public func makeEIP712TypedData(from dict: [String: Any]) throws -> Data {
+        let data = try JSONSerialization.data(withJSONObject: dict, options: [])
+        let decoder = JSONDecoder()
+        let eip712TypedData = try decoder.decode(EIP712TypedData.self, from: data)
+        return try eip712TypedData.digestData()
     }
 }

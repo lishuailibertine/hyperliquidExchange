@@ -25,14 +25,11 @@ public struct ExchangeKeychain{
         self.publicData = publicKey
     }
     
-    public func sign(message: Data) throws -> Data {
-        let hash = try Blake2.hash(.b2b, size: 32, data: message, key: nil)
-        let signedData = SECP256K1.signForRecovery(hash: hash, privateKey: privateData, useExtraVer: false)
+    public func sign(msgHash: Data) throws -> Data {
+        let signedData = SECP256K1.signForRecovery(hash: msgHash, privateKey: privateData, useExtraVer: true)
         guard let signData = signedData.serializedSignature else {
             throw ExchangeSignError.signError
         }
-        debugPrint("signData \(signData.toHexString())")
-//        EIP712TypedData
         return signData
     }
 }
