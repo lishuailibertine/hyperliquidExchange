@@ -5,7 +5,7 @@
 //  Created by li shuai on 2025/7/25.
 //
 import Foundation
-public protocol ExchangeBaseAction: ExchangeEncodePayload{
+public protocol ExchangeBaseAction: ExchangeEncodePayload, Encodable{
     var type: String { get }
 }
 extension ExchangeEncodePayload where Self: Encodable {

@@ -11,6 +11,10 @@ public enum ExchangeLimitOrderType: String, Encodable {
     case Gtc // (good til canceled) orders have no special behavior.
 }
 
+public struct ExchangeLimitTif: Encodable {
+    public var tif: ExchangeLimitOrderType
+}
+
 public enum ExchangeTpslType: String, Encodable{
     case tp
     case sl
@@ -39,7 +43,7 @@ public struct DynamicCodingKeys: CodingKey {
 }
 
 public enum ExchangeOrderType: ExchangeEncodePayload, Encodable {
-    case limit(ExchangeLimitOrderType)
+    case limit(ExchangeLimitTif)
     case trigger(ExchangeTriggerOrderType)
     public func encode(to encoder: Encoder) throws {
         var container = encoder.container(keyedBy: DynamicCodingKeys.self)
@@ -64,8 +68,8 @@ public struct ExchangePlaceOrderPayload: ExchangeEncodePayload, Encodable {
     public var a: Int // asset
     public var b: Bool // isBuy
     public var p: String // price
-    public var r: Bool // reduceOnly
     public var s: String // size
+    public var r: Bool // reduceOnly
     public var t: ExchangeOrderType // type
     public init(a: Int, b: Bool, p: String, r: Bool, s: String, t: ExchangeOrderType) {
         self.a = a

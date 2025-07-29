@@ -4,6 +4,10 @@
 //
 //  Created by li shuai on 2025/7/28.
 //
+import Foundation
+import SwiftMsgpack
+import web3swift
+import CryptoSwift
 public struct ExchangeSignature: ExchangeEncodePayload, Encodable{
     public var r: String
     public var s: String
@@ -51,5 +55,31 @@ public struct ExchangeRequest: ExchangeEncodePayload, Encodable{
         case signature
         case vaultAddress
         case expiresAfter
+    }
+}
+
+extension ExchangeRequest{
+    
+    public func action_hash() throws -> Data{
+        let encoder = MsgPackEncoder()
+        var data = Data()
+        data.append(try encoder.encode(self.action))
+        // Add nonce as 8-byte big-endian
+        let nonceBytes = withUnsafeBytes(of: nonce.bigEndian, Array.init)
+        data.append(contentsOf: nonceBytes)
+        // Vault address
+        if let address = vaultAddress, let addressData = EthereumAddress(address)?.addressData {
+            data.append(0x01)
+            data.append(contentsOf: addressData)
+        } else {
+            data.append(0x00)
+        }
+        // Expires after
+        if let expires = self.expiresAfter {
+            data.append(0x00)
+            let expiresBytes = withUnsafeBytes(of: expires.bigEndian, Array.init)
+            data.append(contentsOf: expiresBytes)
+        }
+        return data.sha3(.keccak256)
     }
 }
