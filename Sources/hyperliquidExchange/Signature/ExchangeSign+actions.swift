@@ -50,7 +50,7 @@ extension ExchangeSign {
 // sign_user_signed_action
 extension ExchangeSign {
     public enum UserActionType: String {
-        case UsdClassTransfer = "UsdClassTransfer"
+        case UsdClassTransfer = "HyperliquidTransaction:UsdClassTransfer"
         case UsdSend = "HyperliquidTransaction:UsdSend"
         public func SIGN_TYPES() -> [Any] {
             switch self {
