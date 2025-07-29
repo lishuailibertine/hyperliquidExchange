@@ -82,4 +82,36 @@ extension ExchangeRequest{
         }
         return data.sha3(.keccak256)
     }
+    
+    public func constructPhantomAgent(hash: String, isMainnet: Bool) -> [String: String] {
+        return [
+            "source": isMainnet ? "a" : "b",
+            "connectionId": hash
+        ]
+    }
+    
+    public func l1Payload(phantomAgent: [String: Any]) -> [String: Any] {
+        return [
+            "domain": [
+                "chainId": 1337,
+                "name": "Exchange",
+                "verifyingContract": "0x0000000000000000000000000000000000000000",
+                "version": "1"
+            ],
+            "types": [
+                "Agent": [
+                    ["name": "source", "type": "string"],
+                    ["name": "connectionId", "type": "bytes32"]
+                ],
+                "EIP712Domain": [
+                    ["name": "name", "type": "string"],
+                    ["name": "version", "type": "string"],
+                    ["name": "chainId", "type": "uint256"],
+                    ["name": "verifyingContract", "type": "address"]
+                ]
+            ],
+            "primaryType": "Agent",
+            "message": phantomAgent
+        ]
+    }
 }
