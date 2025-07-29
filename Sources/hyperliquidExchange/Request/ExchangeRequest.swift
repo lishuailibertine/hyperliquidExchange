@@ -8,11 +8,6 @@ import Foundation
 import SwiftMsgpack
 import web3swift
 import CryptoSwift
-public struct ExchangeSignature: ExchangeEncodePayload, Encodable{
-    public var r: String
-    public var s: String
-    public var v: Int
-}
 public protocol ExchangeEncodePayload {
     func payload() throws -> [String: Any]
 }
