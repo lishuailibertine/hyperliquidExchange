@@ -53,6 +53,7 @@ extension ExchangeSign {
         case UsdClassTransfer = "HyperliquidTransaction:UsdClassTransfer"
         case UsdSend = "HyperliquidTransaction:UsdSend"
         case Withdraw = "HyperliquidTransaction:Withdraw"
+        case SpotSend = "HyperliquidTransaction:SpotSend"
         public func SIGN_TYPES() -> [Any] {
             switch self {
             case .UsdClassTransfer:
@@ -61,6 +62,8 @@ extension ExchangeSign {
                 return ExchangeSign.USD_SEND_SIGN_TYPES()
             case .Withdraw:
                 return ExchangeSign.WITHDRAW_SIGN_TYPES()
+            case .SpotSend:
+                return SPOT_TRANSFER_SIGN_TYPES()
             }
         }
     }
@@ -130,6 +133,16 @@ extension ExchangeSign {
         return [
             ["name": "hyperliquidChain", "type": "string"],
             ["name": "destination", "type": "string"],
+            ["name": "amount", "type": "string"],
+            ["name": "time", "type": "uint64"],
+        ]
+    }
+    
+    static func SPOT_TRANSFER_SIGN_TYPES() -> [Any] {
+        return [
+            ["name": "hyperliquidChain", "type": "string"],
+            ["name": "destination", "type": "string"],
+            ["name": "token", "type": "string"],
             ["name": "amount", "type": "string"],
             ["name": "time", "type": "uint64"],
         ]
