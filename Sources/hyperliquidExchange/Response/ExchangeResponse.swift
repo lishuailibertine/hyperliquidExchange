@@ -87,3 +87,43 @@ public enum ExchangeOrderStatusItem: Decodable {
         throw DecodingError.dataCorruptedError(in: container, debugDescription: "Unknown status format")
     }
 }
+// Meta
+public struct ExchangeMetaUniverse: Decodable {
+    public var szDecimals: Int
+    public var name: String
+    public var maxLeverage: Int
+    public var marginTableId: Int
+}
+
+public struct ExchangeMetaResponse: Decodable {
+    public var universe: [ExchangeMetaUniverse]
+}
+
+public struct ExchangeSpotMetaUniverse: Decodable {
+    public var tokens: [Int]
+    public var name: String
+    public var index: Int
+    public var isCanonical: Bool
+}
+
+public struct ExchangeSpotTokenContract: Decodable {
+    public var address: String
+    public var evm_extra_wei_decimals: Int
+}
+
+public struct ExchangeSpotToken : Decodable {
+    public var name: String
+    public var szDecimals: Int
+    public var weiDecimals: Int
+    public var index: Int
+    public var tokenId: String
+    public var isCanonical: Bool
+    public var evmContract: ExchangeSpotTokenContract?
+    public var fullName: String?
+    public var deployerTradingFeeShare: String
+}
+
+public struct ExchangeSpotMetaResponse: Decodable {
+    public var universe: [ExchangeSpotMetaUniverse]
+    public var tokens: [ExchangeSpotToken]
+}

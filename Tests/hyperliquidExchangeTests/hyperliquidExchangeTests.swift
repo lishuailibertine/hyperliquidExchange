@@ -3,6 +3,7 @@ import Foundation
 import XCTest
 @testable import hyperliquidExchange
 @testable import SwiftMsgpack
+@testable import web3swift
 
 @Test func test_limit_encode() throws {
     let order = ExchangeOrderType.limit(ExchangeLimitTif(tif: .Gtc))
@@ -38,14 +39,45 @@ import XCTest
     do {
         let keypair = try ExchangeKeychain(privateData: Data(hex: "0x0123456789012345678901234567890123456789012345678901234567890123"))
         let exchange = HyperliquidExchange()
-        let place_order_payload = ExchangePlaceOrderPayload(a: 1, b: true, p: "100", r: false, s: "100", t: .limit(ExchangeLimitTif(tif: .Gtc)))
+        let place_order_payload = ExchangePlaceOrderPayload(a: 1, b: true, p: "1000", r: false, s: "0.0001", t: .limit(ExchangeLimitTif(tif: .Gtc)))
         let place_order = ExchangePlaceOrderAction(orders: [place_order_payload], grouping: .na)
         let result = try await exchange.placeOrder(action: place_order) { orderRequest in
             let sigData = try ExchangeSign(keypair: keypair).sign_l1_action(action: orderRequest.action, vaultAddress: orderRequest.vaultAddress, nonce: orderRequest.nonce, expiresAfter: orderRequest.expiresAfter)
             return try ExchangeSignature.parseSignatureHex(sigData.toHexString())
         }
-        print(result)
+        debugPrint(result)
     } catch  {
-        print(error)
+        debugPrint(error)
+    }
+}
+
+@Test func test_read_contract() async throws {
+    do {
+        let web3 = try Web3.new(URL(string: "https://rpc.hyperliquid.xyz/evm")!)
+        let contract = web3.contract(Web3.Utils.erc721ABI, at: EthereumAddress("0x068f321fa8fb9f0d135f290ef6a3e2813e1c8a29")!)
+        let nameValue = try contract?.read("name")!.callPromise().wait()
+        debugPrint(nameValue!)
+    } catch  {
+        debugPrint(error)
+    }
+}
+
+@Test func test_get_meta() async throws {
+    do {
+        let exchange = HyperliquidExchange()
+        let reponse = try await exchange.metaInfo()
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
+    }
+}
+
+@Test func test_get_spot_meta() async throws {
+    do {
+        let exchange = HyperliquidExchange()
+        let reponse = try await exchange.spotMetaInfo()
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
     }
 }

@@ -11,6 +11,14 @@ public class HyperliquidExchange{
         self.vaultAddress = vaultAddress
     }
     
+    public func metaInfo() async throws -> ExchangeMetaResponse {
+        return try await self._postAction(request: ["type": "meta"], path: "/info")
+    }
+    
+    public func spotMetaInfo() async throws -> ExchangeSpotMetaResponse {
+        return try await self._postAction(request: ["type": "spotMeta"], path: "/info")
+    }
+    
     public func placeOrder(action: ExchangePlaceOrderAction, onRequestReady: ((ExchangeRequest) throws -> ExchangeSignature)) async throws -> ExchangeOrderStatusItem {
         let timestamp = Int(Date().timeIntervalSince1970 * 1000)
         var request = ExchangeRequest(action: action, nonce: timestamp)
@@ -60,15 +68,20 @@ public class HyperliquidExchange{
     
     public func postAction<T: Decodable> (request: ExchangeRequest, path: String) async throws -> ExchangeResponse<T> {
         let requestBody = try request.payload()
+        let response: ExchangeResponse<T> = try await _postAction(request: requestBody, path: path)
+        return response
+    }
+    
+    private func _postAction<T: Decodable> (request: [String: Any], path: String) async throws -> T {
         let dataTask = AF.request(
             "\(url)\(path)",
             method: .post,
-            parameters: requestBody,
+            parameters: request,
             encoding: JSONEncoding.default,
             headers: [
                 "Content-Type": "application/json"
             ]
-        ).serializingDecodable(ExchangeResponse<T>.self)
+        ).serializingDecodable(T.self)
         return try await dataTask.value
     }
 }
