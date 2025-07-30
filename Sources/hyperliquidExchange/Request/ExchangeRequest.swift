@@ -38,7 +38,7 @@ public struct ExchangeRequest: ExchangeEncodePayload, Encodable{
             throw ExchangeRequestError.SignatureError
         }
         try container.encode(signature, forKey: .signature)
-        try container.encodeIfPresent(vaultAddress, forKey: .vaultAddress)
+        try container.encode(vaultAddress, forKey: .vaultAddress)
         if let expiresAfter = self.expiresAfter {
             try container.encode(expiresAfter, forKey: .expiresAfter)
         }

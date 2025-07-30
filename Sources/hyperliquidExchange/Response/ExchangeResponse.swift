@@ -6,6 +6,7 @@
 //
 public enum ExchangeResponseError: Error {
     case InvalidResponse
+    case Other(String)
 }
 
 public struct ExchangeResponseStatuses<T: Decodable>: Decodable{
@@ -15,9 +16,32 @@ public struct ExchangeResponseResult<T: Decodable>: Decodable{
     public var type: String
     public var data: ExchangeResponseStatuses<T>?
 }
+
+public enum ExchangeResponseResultOrError<T: Decodable>: Decodable {
+    case result(ExchangeResponseResult<T>)
+    case errorMessage(String)
+    public init(from decoder: Decoder) throws {
+        let container = try decoder.singleValueContainer()
+        if let result = try? container.decode(ExchangeResponseResult<T>.self) {
+            self = .result(result)
+        }
+        else if let message = try? container.decode(String.self) {
+            self = .errorMessage(message)
+        }
+        else {
+            throw DecodingError.typeMismatch(
+                ExchangeResponseResultOrError.self,
+                DecodingError.Context(
+                    codingPath: decoder.codingPath,
+                    debugDescription: "Expected either ExchangeResponseResult<T> or String"
+                )
+            )
+        }
+    }
+}
 public struct ExchangeResponse<T: Decodable>: Decodable{
     public var status: String
-    public var response: ExchangeResponseResult<T>
+    public var response: ExchangeResponseResultOrError<T>
 }
 public struct ExchangeOrderErrorStatus: Decodable {
     public let error: String

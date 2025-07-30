@@ -28,8 +28,24 @@ import XCTest
         "signatureChainId": "0x66eee"
     ] as [String : Any]
     let sigData = try ExchangeSign(keypair: keypair).sign_user_signed_action(action: action, actionType: .UsdSend, isMainnet: false)
-    let signature = ExchangeSignature.parseSignatureHex(sigData.toHexString())!
+    let signature = try ExchangeSignature.parseSignatureHex(sigData.toHexString())
     XCTAssertTrue(signature.r == "0x637b37dd731507cdd24f46532ca8ba6eec616952c56218baeff04144e4a77073")
     XCTAssertTrue(signature.s == "0x11a6a24900e6e314136d2592e2f8d502cd89b7c15b198e1bee043c9589f9fad7")
     XCTAssertTrue(signature.v == 27)
+}
+
+@Test func test_place_order_api() async throws {
+    do {
+        let keypair = try ExchangeKeychain(privateData: Data(hex: "0x0123456789012345678901234567890123456789012345678901234567890123"))
+        let exchange = HyperliquidExchange()
+        let place_order_payload = ExchangePlaceOrderPayload(a: 1, b: true, p: "100", r: false, s: "100", t: .limit(ExchangeLimitTif(tif: .Gtc)))
+        let place_order = ExchangePlaceOrderAction(orders: [place_order_payload], grouping: .na)
+        let result = try await exchange.placeOrder(action: place_order) { orderRequest in
+            let sigData = try ExchangeSign(keypair: keypair).sign_l1_action(action: orderRequest.action, vaultAddress: orderRequest.vaultAddress, nonce: orderRequest.nonce, expiresAfter: orderRequest.expiresAfter)
+            return try ExchangeSignature.parseSignatureHex(sigData.toHexString())
+        }
+        print(result)
+    } catch  {
+        print(error)
+    }
 }

@@ -15,15 +15,15 @@ public struct ExchangeSignature: ExchangeEncodePayload, Encodable{
         self.s = s
         self.v = v
     }
-    static func parseSignatureHex(_ signatureHex: String) -> ExchangeSignature? {
+    static func parseSignatureHex(_ signatureHex: String) throws -> ExchangeSignature {
         guard signatureHex.count == 130 else {
-            return nil
+            throw ExchangeSignError.signError
         }
         let rHex = String(signatureHex.prefix(64))
         let sHex = String(signatureHex.dropFirst(64).prefix(64))
         let vHex = String(signatureHex.suffix(2))
         guard let vInt = Int(vHex, radix: 16) else {
-            return nil
+            throw ExchangeSignError.signError
         }
         return ExchangeSignature(r: "0x" + rHex, s: "0x" + sHex, v: vInt)
     }
