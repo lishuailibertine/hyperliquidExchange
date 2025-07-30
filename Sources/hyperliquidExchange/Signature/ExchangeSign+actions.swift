@@ -52,12 +52,15 @@ extension ExchangeSign {
     public enum UserActionType: String {
         case UsdClassTransfer = "HyperliquidTransaction:UsdClassTransfer"
         case UsdSend = "HyperliquidTransaction:UsdSend"
+        case Withdraw = "HyperliquidTransaction:Withdraw"
         public func SIGN_TYPES() -> [Any] {
             switch self {
             case .UsdClassTransfer:
                 return ExchangeSign.USD_CLASS_TRANSFER_SIGN_TYPES()
             case .UsdSend:
                 return ExchangeSign.USD_SEND_SIGN_TYPES()
+            case .Withdraw:
+                return ExchangeSign.WITHDRAW_SIGN_TYPES()
             }
         }
     }
@@ -115,6 +118,15 @@ extension ExchangeSign {
     }
     
     static func USD_SEND_SIGN_TYPES() -> [Any] {
+        return [
+            ["name": "hyperliquidChain", "type": "string"],
+            ["name": "destination", "type": "string"],
+            ["name": "amount", "type": "string"],
+            ["name": "time", "type": "uint64"],
+        ]
+    }
+    
+    static func WITHDRAW_SIGN_TYPES() -> [Any] {
         return [
             ["name": "hyperliquidChain", "type": "string"],
             ["name": "destination", "type": "string"],

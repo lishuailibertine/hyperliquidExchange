@@ -11,6 +11,8 @@ public class HyperliquidExchange{
         self.vaultAddress = vaultAddress
     }
     
+    
+    
     public func metaInfo() async throws -> ExchangeMetaResponse {
         return try await self._postAction(request: ["type": "meta"], path: "/info")
     }
@@ -64,6 +66,21 @@ public class HyperliquidExchange{
             throw ExchangeResponseError.InvalidResponse
         }
         return true
+    }
+    
+    public func withdraw(action: ExchangeWithdrawAction, onRequestReady: ((ExchangeRequest) throws -> ExchangeSignature)) async throws -> Bool {
+        var request = ExchangeRequest(action: action, nonce: action.time)
+        request.signature = try onRequestReady(request)
+        let response: ExchangeResponse<ExchangeOrderStatusItem> = try await self.postAction(request: request, path: "/exchange")
+        switch response.response {
+        case .result(let exchangeResponseResult):
+            guard exchangeResponseResult.type == "default" else {
+                throw ExchangeResponseError.InvalidResponse
+            }
+            return true
+        case .errorMessage(let string):
+            throw ExchangeResponseError.Other(string)
+        }
     }
     
     public func postAction<T: Decodable> (request: ExchangeRequest, path: String) async throws -> ExchangeResponse<T> {

@@ -51,6 +51,21 @@ import XCTest
     }
 }
 
+@Test func test_withdraw() async throws {
+    do {
+        let keypair = try ExchangeKeychain(privateData: Data(hex: "0x0123456789012345678901234567890123456789012345678901234567890123"))
+        let exchange = HyperliquidExchange(url: "https://api-ui.hyperliquid-testnet.xyz")
+        let withdrawAction = ExchangeWithdrawAction(amount: "3", destination: "0x69423788903db3d3b8a52df0d6111d41c68ee4ec", hyperliquidChain: "Mainnet", signatureChainId: "0xa4b1")
+        let result = try await exchange.withdraw(action: withdrawAction) { withdrawRequest in
+            let sigData = try ExchangeSign(keypair: keypair).sign_user_signed_action(action: withdrawRequest.action, actionType: .Withdraw, isMainnet: false)
+            return try ExchangeSignature.parseSignatureHex(sigData.toHexString())
+        }
+        debugPrint(result)
+    } catch {
+        debugPrint(error)
+    }
+}
+
 @Test func test_read_contract() async throws {
     do {
         let web3 = try Web3.new(URL(string: "https://rpc.hyperliquid.xyz/evm")!)
