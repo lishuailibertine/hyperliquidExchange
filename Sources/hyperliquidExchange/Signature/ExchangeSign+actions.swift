@@ -49,25 +49,6 @@ extension ExchangeSign {
 }
 // sign_user_signed_action
 extension ExchangeSign {
-    public enum UserActionType: String {
-        case UsdClassTransfer = "HyperliquidTransaction:UsdClassTransfer"
-        case UsdSend = "HyperliquidTransaction:UsdSend"
-        case Withdraw = "HyperliquidTransaction:Withdraw"
-        case SpotSend = "HyperliquidTransaction:SpotSend"
-        public func SIGN_TYPES() -> [Any] {
-            switch self {
-            case .UsdClassTransfer:
-                return ExchangeSign.USD_CLASS_TRANSFER_SIGN_TYPES()
-            case .UsdSend:
-                return ExchangeSign.USD_SEND_SIGN_TYPES()
-            case .Withdraw:
-                return ExchangeSign.WITHDRAW_SIGN_TYPES()
-            case .SpotSend:
-                return SPOT_TRANSFER_SIGN_TYPES()
-            }
-        }
-    }
-    
     public func sign_user_signed_action(action: ExchangeBaseAction, actionType: UserActionType = .UsdClassTransfer, isMainnet: Bool = true) throws -> Data{
         let action = try action.payload()
         return try self.sign_user_signed_action_with_dic(action: action, primary_type: actionType.rawValue, payload_types: actionType.SIGN_TYPES(), isMainnet: isMainnet)
@@ -108,43 +89,6 @@ extension ExchangeSign {
             ],
             "primaryType": primary_type,
             "message": newAction
-        ]
-    }
-    
-    static func USD_CLASS_TRANSFER_SIGN_TYPES() -> [Any] {
-       return [
-            ["name": "hyperliquidChain", "type": "string"],
-            ["name": "amount", "type": "string"],
-            ["name": "toPerp", "type": "bool"],
-            ["name": "nonce", "type": "uint64"],
-        ]
-    }
-    
-    static func USD_SEND_SIGN_TYPES() -> [Any] {
-        return [
-            ["name": "hyperliquidChain", "type": "string"],
-            ["name": "destination", "type": "string"],
-            ["name": "amount", "type": "string"],
-            ["name": "time", "type": "uint64"],
-        ]
-    }
-    
-    static func WITHDRAW_SIGN_TYPES() -> [Any] {
-        return [
-            ["name": "hyperliquidChain", "type": "string"],
-            ["name": "destination", "type": "string"],
-            ["name": "amount", "type": "string"],
-            ["name": "time", "type": "uint64"],
-        ]
-    }
-    
-    static func SPOT_TRANSFER_SIGN_TYPES() -> [Any] {
-        return [
-            ["name": "hyperliquidChain", "type": "string"],
-            ["name": "destination", "type": "string"],
-            ["name": "token", "type": "string"],
-            ["name": "amount", "type": "string"],
-            ["name": "time", "type": "uint64"],
         ]
     }
 }
