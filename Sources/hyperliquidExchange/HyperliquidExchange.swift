@@ -5,13 +5,13 @@ import web3swift
 import Alamofire
 public class HyperliquidExchange{
     public var url: String
+    public var unitUrl: String
     public var vaultAddress: String?
-    public init(url: String = "https://api.hyperliquid.xyz", vaultAddress: String? = nil) {
+    public init(url: String = "https://api.hyperliquid.xyz", unitUrl: String = "https://api.hyperunit.xyz", vaultAddress: String? = nil) {
         self.url = url
+        self.unitUrl = unitUrl
         self.vaultAddress = vaultAddress
     }
-    
-    
     
     public func metaInfo() async throws -> ExchangeMetaResponse {
         return try await self._postAction(request: ["type": "meta"], path: "/info")
@@ -19,6 +19,20 @@ public class HyperliquidExchange{
     
     public func spotMetaInfo() async throws -> ExchangeSpotMetaResponse {
         return try await self._postAction(request: ["type": "spotMeta"], path: "/info")
+    }
+    
+    public func generateAddress(addresRequest: ExchangeAddresRequest) async throws -> String {
+        let response: ExchangeGenerateAddressStatus = try await self._getAction(request: [:], url: self.unitUrl, path: "/gen" + addresRequest.pathValue())
+        switch response {
+        case .address(let exchangeGenerateAddress):
+            return exchangeGenerateAddress.address
+        case .error(let string):
+            throw ExchangeResponseError.Other(string)
+        }
+    }
+    
+    public func estimateFees() async throws -> ExchangeEstimateFees {
+        return try await self._getAction(request: [:], url: self.unitUrl, path: "/v2/estimate-fees")
     }
     
     public func placeOrder(action: ExchangePlaceOrderAction, onRequestReady: ((ExchangeRequest) throws -> ExchangeSignature)) async throws -> ExchangeOrderStatusItem {
@@ -113,6 +127,16 @@ public class HyperliquidExchange{
             headers: [
                 "Content-Type": "application/json"
             ]
+        ).serializingDecodable(T.self)
+        return try await dataTask.value
+    }
+    
+    private func _getAction<T: Decodable> (request: [String: Any], url: String, path: String) async throws -> T {
+        let dataTask = AF.request(
+            "\(url)\(path)",
+            method: .get,
+            parameters: request,
+            encoding:  URLEncoding.default
         ).serializingDecodable(T.self)
         return try await dataTask.value
     }

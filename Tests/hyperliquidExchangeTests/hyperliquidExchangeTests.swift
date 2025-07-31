@@ -96,3 +96,24 @@ import XCTest
         debugPrint(error)
     }
 }
+
+@Test func test_generate_address() async throws {
+    do {
+        let exchange = HyperliquidExchange(unitUrl: "https://api.hyperunit-testnet.xyz")
+        let request = ExchangeAddresRequest(src_chain: "bitcoin", dst_chain: "hyperliquid", asset: "btc", dst_addr: "0x99a5F7202c4983a6f0Ca9d8F0526Fcd9d2be9e1D")
+        let reponse = try await exchange.generateAddress(addresRequest: request)
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
+    }
+}
+
+@Test func test_estimate_fees() async throws {
+    do {
+        let exchange = HyperliquidExchange()
+        let reponse = try await exchange.estimateFees()
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
+    }
+}
