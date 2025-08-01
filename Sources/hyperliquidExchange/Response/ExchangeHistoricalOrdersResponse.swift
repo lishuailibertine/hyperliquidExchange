@@ -23,12 +23,12 @@ public struct ExchangeHistoricalOrderModel: Decodable {
 }
 
 public enum ExchangeHistoricalOrdersStatus: Decodable, Equatable {
-    case filled
-    case open
-    case canceled
-    case triggered
-    case rejected
-    case marginCanceled
+    case filled // 订单已完全成交
+    case open // 订单已创建，但尚未成交或未全部成交
+    case canceled // 订单被用户或系统取消，未全部成交
+    case triggered // 条件订单已触发，但未必成交
+    case rejected // 下单失败，未被接受
+    case marginCanceled //爆仓?
     case unknown(String)
     public init(from decoder: Decoder) throws {
         let container = try decoder.singleValueContainer()

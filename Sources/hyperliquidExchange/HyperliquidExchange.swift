@@ -41,6 +41,10 @@ public class HyperliquidExchange{
         }
     }
     
+    public func clearinghouseState(address: String) async throws -> ExchangeClearingStateResponse {
+        return try await self._postAction(request: ["type": "clearinghouseState", "user": address], path: "/info")
+    }
+    
     public func historicalOrders(address: String) async throws -> [ExchangeHistoricalOrdersResponse] {
         return try await self._postAction(request: ["type": "historicalOrders", "user": address], path: "/info")
     }
