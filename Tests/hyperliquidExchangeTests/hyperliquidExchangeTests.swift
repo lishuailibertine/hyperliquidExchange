@@ -117,3 +117,36 @@ import XCTest
         debugPrint(error)
     }
 }
+
+@Test func test_operations() async throws {
+    do {
+        let exchange = HyperliquidExchange()
+        let reponse = try await exchange.operations(address: "0x7f90868AE4b1944Bfb468e9c39b296E05EE02f2E")
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
+    }
+}
+
+@Test func test_snapshot() async throws {
+    do {
+        let exchange = HyperliquidExchange()
+        var request = ExchangeCoinSnapshotRequest(coin: "SOL", interval: "15m", startTime: 0)
+        let oneDayMillis: Int = 24 * 60 * 60 * 1000
+        request.startTime = request.endTime - oneDayMillis
+        let reponse = try await exchange.snapshot(request: request)
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
+    }
+}
+
+@Test func test_historicalOrders() async throws {
+    do {
+        let exchange = HyperliquidExchange()
+        let reponse = try await exchange.historicalOrders(address: "0x7f90868AE4b1944Bfb468e9c39b296E05EE02f2E")
+        debugPrint(reponse)
+    } catch {
+        debugPrint(error)
+    }
+}

@@ -10,15 +10,32 @@ import SwiftMsgpack
 import web3swift
 import CryptoSwift
 import Blake2
-
+import BIP39swift
+import BIP32Swift
 public enum ExchangeSignError: Error {
     case invalidPrivateData
+    case invalidPublicData
+    case invalidMnemonic
     case signError
     case invaildChainId
 }
 public struct ExchangeKeychain{
     public var privateData: Data
     public var publicData: Data
+    static let DEFAULT_PATH = "m/44'/60'/0'/0/0"
+    public init(mnemonics: String) throws {
+        guard let seed = BIP39.seedFromMmemonics(mnemonics) else {
+            throw ExchangeSignError.invalidMnemonic
+        }
+        guard let node = HDNode(seed: seed), let treeNode = node.derive(path: ExchangeKeychain.DEFAULT_PATH) else {
+            throw ExchangeSignError.invalidMnemonic
+        }
+        guard let privateKey = treeNode.privateKey else {
+            throw ExchangeSignError.invalidPrivateData
+        }
+        try self.init(privateData: privateKey)
+    }
+    
     public init(privateData: Data) throws {
         self.privateData = privateData
         guard let publicKey = SECP256K1.privateToPublic(privateKey: privateData, compressed: false) else {
@@ -33,6 +50,13 @@ public struct ExchangeKeychain{
             throw ExchangeSignError.signError
         }
         return signData
+    }
+    
+    public func address() throws -> String {
+        guard let address = Web3.Utils.publicToAddress(self.publicData) else {
+            throw ExchangeSignError.invalidPublicData
+        }
+        return address.address
     }
 }
 public struct ExchangeSign {

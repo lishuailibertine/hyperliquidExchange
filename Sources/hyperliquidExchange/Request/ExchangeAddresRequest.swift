@@ -12,7 +12,15 @@ public struct ExchangeAddresRequest {
     public var asset: String // asset symbol ("btc", "eth", "sol", or "fart")
     public var dst_addr: String // destination address.
     
+    public init(src_chain: String, dst_chain: String, asset: String, dst_addr: String) {
+        self.src_chain = src_chain
+        self.dst_chain = dst_chain
+        self.asset = asset
+        self.dst_addr = dst_addr
+    }
+    
     public func pathValue() -> String {
         return "/\(src_chain)/\(dst_chain)/\(asset)/\(dst_addr)"
     }
+    
 }

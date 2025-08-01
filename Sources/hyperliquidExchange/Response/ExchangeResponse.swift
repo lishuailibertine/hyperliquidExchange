@@ -93,6 +93,13 @@ public struct ExchangeMetaUniverse: Decodable {
     public var name: String
     public var maxLeverage: Int
     public var marginTableId: Int
+    public var assetId: Int = -1
+    enum CodingKeys: String, CodingKey {
+        case szDecimals
+        case name
+        case maxLeverage
+        case marginTableId
+    }
 }
 
 public struct ExchangeMetaResponse: Decodable {

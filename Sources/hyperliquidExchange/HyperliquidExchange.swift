@@ -14,11 +14,35 @@ public class HyperliquidExchange{
     }
     
     public func metaInfo() async throws -> ExchangeMetaResponse {
-        return try await self._postAction(request: ["type": "meta"], path: "/info")
+        let response: ExchangeMetaResponse = try await self._postAction(request: ["type": "meta"], path: "/info")
+        let updatedUniverse = response.universe.enumerated().map { (index, item) -> ExchangeMetaUniverse in
+            var updatedItem = item
+            updatedItem.assetId = index
+            return updatedItem
+        }
+        return ExchangeMetaResponse(universe: updatedUniverse)
     }
     
     public func spotMetaInfo() async throws -> ExchangeSpotMetaResponse {
         return try await self._postAction(request: ["type": "spotMeta"], path: "/info")
+    }
+    
+    public func snapshot(request: ExchangeCoinSnapshotRequest) async throws -> [ExchangeSnapshotResponse]{
+        return try await self._postAction(request: ["type": "candleSnapshot", "req": try request.payload()], path: "/info")
+    }
+    
+    public func operations(address: String) async throws -> ExchangeOperationsResponse {
+        let response: ExchangeOperationsResponseStatus = try await self._getAction(request: [:], url: self.unitUrl, path: "/operations/\(address)")
+        switch response {
+        case .success(let response):
+            return response
+        case .error(let message):
+            throw ExchangeResponseError.Other(message)
+        }
+    }
+    
+    public func historicalOrders(address: String) async throws -> [ExchangeHistoricalOrdersResponse] {
+        return try await self._postAction(request: ["type": "historicalOrders", "user": address], path: "/info")
     }
     
     public func generateAddress(addresRequest: ExchangeAddresRequest) async throws -> String {
