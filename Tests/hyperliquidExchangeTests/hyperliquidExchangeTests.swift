@@ -156,7 +156,7 @@ import XCTest
     do {
         let exchange = HyperliquidExchange()
         let reponse = try await exchange.clearinghouseState(address: "0x7f90868AE4b1944Bfb468e9c39b296E05EE02f2E")
-        debugPrint(reponse)x
+        debugPrint(reponse)
     } catch {
         debugPrint(error)
     }
